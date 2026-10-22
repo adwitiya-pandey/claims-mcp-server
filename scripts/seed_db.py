@@ -150,7 +150,9 @@ def seed_database(output_path: Path) -> None:
     finally:
         connection.close()
     ADVERSARIAL_IDS.parent.mkdir(parents=True, exist_ok=True)
-    ADVERSARIAL_IDS.write_text("".join(f"{note_id}\n" for note_id in ids), encoding="utf-8")
+    ADVERSARIAL_IDS.write_text(
+        "".join(f"{note_id}\n" for note_id in ids), encoding="utf-8"
+    )
 
 
 def main() -> None:

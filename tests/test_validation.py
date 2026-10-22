@@ -49,7 +49,10 @@ def test_claim_id_validation(value, valid) -> None:
 )
 def test_member_id_validation(value, valid) -> None:
     if valid:
-        assert ListMemberClaimsInput.model_validate({"member_id": value}).member_id == value
+        assert (
+            ListMemberClaimsInput.model_validate({"member_id": value}).member_id
+            == value
+        )
     else:
         with pytest.raises(ValidationError):
             ListMemberClaimsInput.model_validate({"member_id": value})
@@ -77,7 +80,15 @@ def test_coverage_id_validation(plan_id, procedure_code, valid) -> None:
 
 @pytest.mark.parametrize(
     ("year", "valid"),
-    [(2000, True), (2100, True), (1999, False), (2101, False), ("2025", False), (True, False), (None, False)],
+    [
+        (2000, True),
+        (2100, True),
+        (1999, False),
+        (2101, False),
+        ("2025", False),
+        (True, False),
+        (None, False),
+    ],
 )
 def test_year_is_strict_and_bounded(year, valid) -> None:
     values = {"member_id": "M000001", "year": year}
@@ -91,8 +102,16 @@ def test_year_is_strict_and_bounded(year, valid) -> None:
 @pytest.mark.parametrize(
     ("model", "values", "valid"),
     [
-        (ListMemberClaimsInput, {"member_id": "M000001", "limit": 1, "offset": 0}, True),
-        (ListMemberClaimsInput, {"member_id": "M000001", "limit": 50, "offset": 10000}, True),
+        (
+            ListMemberClaimsInput,
+            {"member_id": "M000001", "limit": 1, "offset": 0},
+            True,
+        ),
+        (
+            ListMemberClaimsInput,
+            {"member_id": "M000001", "limit": 50, "offset": 10000},
+            True,
+        ),
         (ListMemberClaimsInput, {"member_id": "M000001", "limit": 0}, False),
         (ListMemberClaimsInput, {"member_id": "M000001", "limit": 51}, False),
         (ListMemberClaimsInput, {"member_id": "M000001", "offset": -1}, False),
@@ -114,6 +133,10 @@ def test_pagination_bounds_and_extra_fields(model, values, valid) -> None:
 
 
 def test_status_enum_rejects_unknown_and_accepts_none() -> None:
-    assert ListMemberClaimsInput.model_validate({"member_id": "M000001", "status": None})
+    assert ListMemberClaimsInput.model_validate(
+        {"member_id": "M000001", "status": None}
+    )
     with pytest.raises(ValidationError):
-        ListMemberClaimsInput.model_validate({"member_id": "M000001", "status": "PAID;--"})
+        ListMemberClaimsInput.model_validate(
+            {"member_id": "M000001", "status": "PAID;--"}
+        )

@@ -92,8 +92,18 @@ def test_member_ytd_groups_status_and_floors_remaining_limit(tmp_path) -> None:
         "annual_limit": 1000.0,
         "deductible": 100.0,
         "by_status": [
-            {"status": "PAID", "claim_count": 2, "total_billed": 600.0, "total_paid": 440.0},
-            {"status": "PENDED", "claim_count": 1, "total_billed": 250.0, "total_paid": 0.0},
+            {
+                "status": "PAID",
+                "claim_count": 2,
+                "total_billed": 600.0,
+                "total_paid": 440.0,
+            },
+            {
+                "status": "PENDED",
+                "claim_count": 1,
+                "total_billed": 250.0,
+                "total_paid": 0.0,
+            },
         ],
         "remaining_annual_limit": 560.0,
     }

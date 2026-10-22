@@ -92,9 +92,7 @@ def get_member_ytd_summary(
         (member_id, str(year)),
     ).fetchall()
     by_status = [dict(row) for row in grouped]
-    paid_total = sum(
-        row["total_paid"] for row in by_status if row["status"] == "PAID"
-    )
+    paid_total = sum(row["total_paid"] for row in by_status if row["status"] == "PAID")
     annual_limit = member["annual_limit"]
     return {
         "member_id": member_id,

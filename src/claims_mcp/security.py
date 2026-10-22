@@ -143,8 +143,7 @@ def sanitize_untrusted_text(text: str, max_length: int = 1000) -> tuple[str, boo
     sanitized = "".join(
         character
         for character in text
-        if (unicodedata.category(character) not in {"Cc", "Cf"})
-        or character in "\n\t"
+        if (unicodedata.category(character) not in {"Cc", "Cf"}) or character in "\n\t"
     )
     was_truncated = len(sanitized) > max_length
     return sanitized[:max_length], was_truncated

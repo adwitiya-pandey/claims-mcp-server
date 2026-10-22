@@ -11,7 +11,9 @@ from claims_mcp.security import TOOL_NAMES, append_key
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--id", required=True, dest="key_id")
-    parser.add_argument("--tools", required=True, help="all or a comma-separated tool list")
+    parser.add_argument(
+        "--tools", required=True, help="all or a comma-separated tool list"
+    )
     parser.add_argument("--out", type=Path, default=Path("keys.json"))
     args = parser.parse_args()
     tools = sorted(TOOL_NAMES) if args.tools == "all" else args.tools.split(",")

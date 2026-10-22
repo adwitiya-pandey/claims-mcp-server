@@ -15,7 +15,14 @@ def test_seed_has_expected_counts_and_is_deterministic(tmp_path) -> None:
     with sqlite3.connect(first) as connection:
         counts = {
             table: connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-            for table in ("plans", "members", "providers", "coverage_rules", "claims", "claim_notes")
+            for table in (
+                "plans",
+                "members",
+                "providers",
+                "coverage_rules",
+                "claims",
+                "claim_notes",
+            )
         }
         assert counts == {
             "plans": 3,
@@ -25,7 +32,9 @@ def test_seed_has_expected_counts_and_is_deterministic(tmp_path) -> None:
             "claims": 1500,
             "claim_notes": 400,
         }
-        with open(connection.execute("PRAGMA database_list").fetchone()[2], "rb") as db_file:
+        with open(
+            connection.execute("PRAGMA database_list").fetchone()[2], "rb"
+        ) as db_file:
             first_bytes = db_file.read()
     assert first_bytes == second.read_bytes()
 

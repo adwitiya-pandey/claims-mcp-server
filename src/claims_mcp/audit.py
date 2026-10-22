@@ -75,13 +75,16 @@ def write_structured_stderr(record: dict[str, Any]) -> None:
         sys.stderr.write(encoded + "\n")
         sys.stderr.flush()
     except OSError as error:
-        raise AuditWriteError("Structured security event could not be written") from error
+        raise AuditWriteError(
+            "Structured security event could not be written"
+        ) from error
 
 
 def make_structured_record(
     *,
     tool_name: str | None,
     caller_key: str | None,
+    caller_key_hash: str | None = None,
     claim_id: str | None,
     guardrail_status: str,
     latency_ms: float,
@@ -95,7 +98,7 @@ def make_structured_record(
         "timestamp": utc_timestamp(),
         "correlation_id": correlation_id or new_correlation_id(),
         "tool_name": tool_name,
-        "caller_key_hash": key_hash_prefix(caller_key),
+        "caller_key_hash": caller_key_hash or key_hash_prefix(caller_key),
         "claim_id": claim_id,
         "guardrail_status": guardrail_status,
         "latency_ms": max(0.0, round(latency_ms, 3)),
