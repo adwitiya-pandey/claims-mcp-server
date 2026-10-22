@@ -1,6 +1,6 @@
 # MCP Python SDK notes
 
-Pre-filled on 17 Oct 2026 and verified on 19 Oct 2026 by running `mcp` 2.3.0 in the uv project environment. All probe results below were re-run and confirmed.
+Pre-filled on 17 Oct 2026 and verified on 19 Oct 2026 by running `mcp` 2.3.0 in the uv project environment. The probes were re-run on Python 3.12.15 with `mcp` 2.3.0 on 22 Oct 2026 and confirmed.
 
 ## Verified imports
 ```python
@@ -28,6 +28,8 @@ from mcp.client.streamable_http import streamable_http_client
 | Parameter typed `object` with a default | handler is called with whatever was sent (`int` arrived as `int`); an extra unknown argument is silently ignored and the parameter stays `None` |
 | HTTP client with a header | `Client(streamable_http_client(url, http_client=<AsyncClient(headers={"Authorization": "Bearer ..."})>))`; `Client("http://127.0.0.1:PORT/mcp")` also works. The SDK's client library imports as `httpx2` |
 | HTTP server | `server.run(transport="streamable-http", host="127.0.0.1", port=8791)`; endpoint `/mcp` |
+
+The Python 3.12.15 probe reproduced every result above. In particular, an SDK-validated missing argument produces a tool result that echoes the supplied argument object, while an `object = None` handler receives wrong scalar types but the SDK silently discards unknown extra keys. This is why the server must intercept raw tool arguments before the tool manager validates them.
 
 ## Open items for T1, T8, T9 (not verified; decide with evidence, record in `docs/decisions.md`)
 1. **S13:** how to make every call reach the pipeline even when arguments are missing, extra or wrongly typed, while keeping a useful tool schema for clients. Candidates: permissive parameter types plus your own validation and an explicit extra-argument check; a lower-level handler. Prove with the S13 test first.

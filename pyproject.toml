@@ -1,0 +1,29 @@
+[project]
+name = "claims-mcp"
+version = "0.1.0"
+description = "Read-only MCP server over synthetic health-insurance claims"
+readme = "README.md"
+authors = [
+    { name = "adwitiya-pandey", email = "76179646+adwitiya-pandey@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "mcp==2.3.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.2",
+]
