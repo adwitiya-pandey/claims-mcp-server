@@ -17,6 +17,7 @@ def _connection(tmp_path):
 def test_get_claim_joins_member_plan_and_provider(tmp_path) -> None:
     with _connection(tmp_path) as connection:
         result = queries.get_claim(connection, "CLM00000001")
+        missing = queries.get_claim(connection, "CLM99999999")
     assert result == {
         "claim_id": "CLM00000001",
         "member_id": "M000001",
@@ -32,13 +33,14 @@ def test_get_claim_joins_member_plan_and_provider(tmp_path) -> None:
         "paid_amount": 90.0,
         "status": "PAID",
     }
-    with _connection(tmp_path) as connection:
-        assert queries.get_claim(connection, "CLM99999999") is None
+    assert missing is None
 
 
 def test_list_member_claims_has_status_filter_and_pagination(tmp_path) -> None:
     with _connection(tmp_path) as connection:
         result = queries.list_member_claims(connection, "M000001", None, 2, 1)
+        paid = queries.list_member_claims(connection, "M000001", "PAID", 10, 0)
+        missing = queries.list_member_claims(connection, "M999999", None, 10, 0)
     assert result == {
         "total": 4,
         "limit": 2,
@@ -60,9 +62,6 @@ def test_list_member_claims_has_status_filter_and_pagination(tmp_path) -> None:
             },
         ],
     }
-    with _connection(tmp_path) as connection:
-        paid = queries.list_member_claims(connection, "M000001", "PAID", 10, 0)
-        missing = queries.list_member_claims(connection, "M999999", None, 10, 0)
     assert paid is not None and paid["total"] == 2
     assert missing is None
 
