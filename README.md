@@ -243,7 +243,6 @@ claims-mcp-server-1/
 |-- .python-version                  Python 3.12 project interpreter
 |-- AGENTS.md                        Repository-specific agent instructions
 |-- Dockerfile                       Non-root container and read-only DB mount
-|-- .dockerignore                    Excludes secrets and runtime state from images
 |-- LICENSE                          MIT license
 |-- pyproject.toml                   Python package and tool configuration
 |-- README.md                        This guide

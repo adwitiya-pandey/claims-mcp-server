@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+keys.json
+*.db
+audit/
+.git/
+.venv/
+.pytest_cache/
+.ruff_cache/
+tests/
