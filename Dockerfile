@@ -25,6 +25,6 @@ USER 10001:10001
 VOLUME ["/data"]
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD ["uv", "run", "--frozen", "python", "-c", "from claims_mcp.db import open_readonly; c=open_readonly('/data/claims.db'); c.execute('SELECT 1'); c.close()"]
+    CMD ["uv", "run", "--frozen", "--no-sync", "python", "-c", "from claims_mcp.db import open_readonly; c=open_readonly('/data/claims.db'); c.execute('SELECT 1'); c.close()"]
 
-CMD ["uv", "run", "--frozen", "python", "-m", "claims_mcp", "--transport", "stdio"]
+CMD ["uv", "run", "--frozen", "--no-sync", "python", "-m", "claims_mcp", "--transport", "stdio"]
