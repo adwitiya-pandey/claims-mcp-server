@@ -31,11 +31,14 @@ from mcp.client.streamable_http import streamable_http_client
 
 The Python 3.12.15 probe reproduced every result above. In particular, an SDK-validated missing argument produces a tool result that echoes the supplied argument object, while an `object = None` handler receives wrong scalar types but the SDK silently discards unknown extra keys. This is why the server must intercept raw tool arguments before the tool manager validates them.
 
-## Open items for T1, T8, T9 (not verified; decide with evidence, record in `docs/decisions.md`)
-1. **S13:** how to make every call reach the pipeline even when arguments are missing, extra or wrongly typed, while keeping a useful tool schema for clients. Candidates: permissive parameter types plus your own validation and an explicit extra-argument check; a lower-level handler. Prove with the S13 test first.
-2. Server-side Bearer-key check for HTTP: the SDK's documented mechanism (`token_verifier`) versus a small ASGI middleware. Read the SDK Authorization page first.
-3. Whether `structured_content` can be populated reliably (return a typed model or set `structured_output=True`) so Project B can read it without parsing text.
-4. Python 3.12 versus the 3.13 used for these probes: re-run everything.
+## Decisions verified for T8/T9
+
+1. **S13:** `ClaimsMCPServer.call_tool` intercepts the raw argument dictionary before the SDK tool manager validates typed parameters. The five registered tool schemas remain typed and useful; validation is performed by the Pydantic request models. The missing, extra, and wrong-type calls in `tests/test_server_s13.py` each reach the pipeline, leave one audit file line, and return safe errors without echoing values.
+2. **HTTP bearer auth:** the official authorization guide documents `TokenVerifier` together with `AuthSettings` as an OAuth resource-server integration. Since this project uses static API keys and has no OAuth issuer, `BearerKeyMiddleware` protects `/mcp` before request parsing. The SDK continues to provide the Streamable HTTP transport. See [docs/decisions.md](./decisions.md).
+3. **Structured output:** the server returns both compact JSON text and `structured_content`; the protocol suite checks the shape for all five tools.
+4. **Python 3.12:** the import/error/schema probes and project tests ran on Python 3.12.15 with `mcp` 2.3.0.
+
+Official pages consulted: [Authorization](https://py.sdk.modelcontextprotocol.io/run/authorization/index.md), [Testing](https://py.sdk.modelcontextprotocol.io/get-started/testing/index.md), and [Middleware](https://py.sdk.modelcontextprotocol.io/advanced/middleware/index.md).
 
 ## Probe snippets (re-run these)
 ```python
