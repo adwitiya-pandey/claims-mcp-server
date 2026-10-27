@@ -114,3 +114,33 @@ def test_structured_stderr_rejects_unapproved_fields(capsys) -> None:
     with pytest.raises(ValueError):
         write_structured_stderr({"raw_input": "not allowed"})
     assert capsys.readouterr().err == ""
+
+
+def test_http_auth_middleware_events_carry_http_auth_tool_name(capsys) -> None:
+    """BearerKeyMiddleware must use 'http/auth' as tool_name (not None).
+
+    A real run produced a line with tool_name=null and guardrail_status=PASS
+    between two tool calls.  The source was the middleware auth event.
+    Labelling it 'http/auth' makes every structured event self-describing
+    and allows log consumers to separate protocol-layer from tool-layer events.
+    """
+    for authenticated in (True, False):
+        record = make_structured_record(
+            tool_name="http/auth",
+            caller_key="test-key-value" if authenticated else None,
+            claim_id=None,
+            guardrail_status="PASS" if authenticated else "BLOCKED_AUTH",
+            latency_ms=0.5,
+            error=None if authenticated else "UNAUTHENTICATED",
+        )
+        write_structured_stderr(record)
+
+    lines = [line for line in capsys.readouterr().err.splitlines() if line]
+    assert len(lines) == 2
+    for line in lines:
+        decoded = json.loads(line)
+        assert decoded["tool_name"] == "http/auth", (
+            "middleware auth events must use 'http/auth', not None"
+        )
+    statuses = {json.loads(line)["guardrail_status"] for line in lines}
+    assert statuses == {"PASS", "BLOCKED_AUTH"}
