@@ -93,7 +93,7 @@ sequenceDiagram
     SQLite-->>Router: matching rows
     Router->>Sanitize: sanitize output and label claim notes untrusted
     Sanitize-->>Router: safe response shape
-    Router->>Audit: one structured JSON event; append JSONL audit record
+    Router->>Audit: one structured JSON event, append JSONL audit record
     Router-->>Transport: result or stable safe error
     Transport-->>Client: MCP tool result
 ```
