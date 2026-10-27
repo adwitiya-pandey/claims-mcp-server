@@ -193,7 +193,7 @@ Python entry point directly on loopback with a configured keys file.
 ## File structure
 
 ```text
-claims-mcp-server-1/
+claims-mcp-server/
 |-- .github/                         CI automation
 |   `-- workflows/
 |       `-- ci.yml                   Locked install, Ruff, and pytest
