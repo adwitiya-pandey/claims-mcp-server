@@ -45,7 +45,7 @@ table names, column names, or sort clauses. Each tool call opens one SQLite
 connection in read-only mode and closes it after the query.
 
 ## Architecture
-
+### The Flowchart:
 ```mermaid
 flowchart TB
     Host["MCP Host / Client"]
@@ -73,7 +73,7 @@ flowchart TB
     Router -. tool outcome .-> AuditFile
     Router -. redacted event .-> Stderr
 ```
-
+### The Sequence Diagram:
 ```mermaid
 sequenceDiagram
     participant Client as MCP Host / Client
