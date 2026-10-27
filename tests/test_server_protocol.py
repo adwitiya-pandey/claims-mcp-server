@@ -164,7 +164,7 @@ def test_http_auth_and_per_tool_authorization(tmp_path, capsys) -> None:
     stderr_records = [
         json.loads(line) for line in capsys.readouterr().err.splitlines() if line
     ]
-    auth_events = [item for item in stderr_records if item["tool_name"] is None]
+    auth_events = [item for item in stderr_records if item["tool_name"] == "http/auth"]
     blocked_auth = [
         item for item in auth_events if item["guardrail_status"] == "BLOCKED_AUTH"
     ]
@@ -172,7 +172,9 @@ def test_http_auth_and_per_tool_authorization(tmp_path, capsys) -> None:
     assert all(item["error"] == "UNAUTHENTICATED" for item in blocked_auth)
     assert any(item["caller_key_hash"] is None for item in blocked_auth)
     assert any(item["caller_key_hash"] is not None for item in blocked_auth)
-    tool_events = [item for item in stderr_records if item["tool_name"] is not None]
+    tool_events = [
+        item for item in stderr_records if item["tool_name"] not in (None, "http/auth")
+    ]
     assert len(tool_events) == 2
     assert {item["guardrail_status"] for item in tool_events} == {
         "PASS",

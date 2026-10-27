@@ -52,7 +52,7 @@ class BearerKeyMiddleware:
         try:
             write_structured_stderr(
                 make_structured_record(
-                    tool_name=None,
+                    tool_name="http/auth",
                     caller_key=supplied_key,
                     claim_id=None,
                     guardrail_status="PASS" if authenticated else "BLOCKED_AUTH",
